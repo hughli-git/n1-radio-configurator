@@ -2,6 +2,16 @@
 
 使用 Python 和 Tkinter，通过蓝牙连接努比亚 N1 对讲机，读取、编辑和保存频道及设备设置。程序入口为 `radio_configurator.py`。
 
+## 界面预览
+
+频道编辑：
+
+![频道编辑界面](docs/01.png)
+
+设备设置：
+
+![设备设置界面](docs/02.png)
+
 ## 安装与运行
 
 建议使用 Windows、Python 3.10 或更新版本，并确保电脑蓝牙可用。标准 Windows Python 自带 Tkinter；蓝牙依赖通过 requirements 安装。
