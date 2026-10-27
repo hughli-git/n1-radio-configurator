@@ -106,7 +106,21 @@ python -m venv .venv
 
 刷新尽量保留选中行、滚动位置及编辑内容。主动重新读取的频道类型会以设备配置为准。`config.ini`、日志和频道备份均为本地文件，已加入 `.gitignore`。
 
-## 测试与目录
+## Windows 单文件 EXE
+
+使用者可从 GitHub Releases 下载 `N1RadioConfigurator.exe`，双击运行，无需安装 Python 或额外 Python 库。电脑仍需具备可用的 Windows 蓝牙硬件与驱动。
+
+EXE 的配置、日志和频道备份保存在 `%LOCALAPPDATA%\N1RadioConfigurator`，升级或移动 EXE 不会删除这些数据。源码运行仍使用项目目录。EXE 首次使用采用默认配置，不包含开发者的设备记录。
+
+在 Windows 上安装 Python 3.10+（含 Tkinter）后，在项目目录执行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\build.ps1
+```
+
+输出为 `dist\N1RadioConfigurator.exe`。构建过程需要联网安装依赖；使用者运行 EXE 不需要安装构建工具。单文件程序启动时会自动解压内置运行库，首次打开可能需要稍候。发布前应验证窗口启动、配置持久保存，并在有蓝牙的电脑上检查扫描和连接。
+
+## 自动测试
 
 普通测试不会连接或写入硬件，需要可用 Tkinter 桌面环境：
 

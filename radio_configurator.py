@@ -6,6 +6,8 @@
 from __future__ import annotations
 import asyncio, json, queue, struct, threading, tkinter as tk, logging, traceback, configparser
 import re
+import os
+import sys
 from decimal import Decimal, InvalidOperation
 from dataclasses import replace
 from pathlib import Path
@@ -25,10 +27,15 @@ N1_READ_CHAR = "0000bec9-0000-1000-8000-00805f9b34fb"
 N1_WRITE_CHAR = "0000bec8-0000-1000-8000-00805f9b34fb"
 N1_COMMAND_CHAR = "0000bec7-0000-1000-8000-00805f9b34fb"
 N1_NOTIFY2_CHAR = "0000feab-0000-1000-8000-00805f9b34fb"
-DATA_DIR = Path(__file__).with_name("radio_profiles")
+RESOURCE_DIR = Path(__file__).resolve().parent
+# 单文件程序的资源会解压到临时目录，用户数据必须单独持久保存。
+USER_DIR = (Path(os.environ.get("LOCALAPPDATA") or Path.home()) / "N1RadioConfigurator"
+            if getattr(sys, "frozen", False) else RESOURCE_DIR)
+USER_DIR.mkdir(parents=True, exist_ok=True)
+DATA_DIR = USER_DIR / "radio_profiles"
 DATA_DIR.mkdir(exist_ok=True)
-LOG_FILE = Path(__file__).with_name("radio_debug.log")
-CONFIG_INI = Path(__file__).with_name("config.ini")
+LOG_FILE = USER_DIR / "radio_debug.log"
+CONFIG_INI = USER_DIR / "config.ini"
 logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG,
                     format="%(asctime)s %(levelname)s %(message)s", encoding="utf-8")
 LOGGER = logging.getLogger("radio")
@@ -392,7 +399,7 @@ class App(tk.Tk):
         self.config_data = configparser.ConfigParser(interpolation=None)
         self.config_data.read(CONFIG_INI, encoding="utf-8")
         if not CONFIG_INI.exists():
-            self.config_data.read(Path(__file__).with_name("n1_devices.ini"), encoding="utf-8")
+            self.config_data.read(USER_DIR / "n1_devices.ini", encoding="utf-8")
         self.loaded_kinds = set()
         self.editor_key = None
         self._loading_editor = False
